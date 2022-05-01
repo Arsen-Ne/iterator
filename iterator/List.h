@@ -13,108 +13,66 @@ enum class Iterators {
 
 class List
 {
-private:
-	//public:
+private:	
 	vector <int> vec;
 	size_t top = 0;
+
 public:
 	friend class ListIterator;
-	//friend class ListIteratorStep;
 	friend class ListIteratorValue;
+	friend class ListIteratorPredicate;
 
-	List(size_t aSize) {
-		vec.resize(aSize);
-	}
+	List(size_t aSize);
 
 	virtual ~List() {};
 
 	bool append(int a);
-
 	bool remove();
 
 	ListIterator* createIterator(Iterators its, const int aStep) const;
-	ListIterator* createIterator(Iterators its, void* aPredicate) const;
+	ListIterator* createIterator(Iterators its, bool(*aPredicate)(int)) const;
 };
 
-	class ListIterator {
-	protected:
-		//friend class List;
-		const List* pList;
-		size_t current;
-		ListIterator(const List* aPList) : pList(aPList) {}
-	public:
-		//	virtual bool first() = 0;
-		virtual bool next() = 0;
-		bool first() {
-			current = pList->top;
-			return next();
-		}
+class ListIterator
+{
+protected:
+	const List* pList;
+	size_t current;
+	ListIterator(const List* aPList) : pList(aPList) {}
+public:
+	bool first();
+	virtual bool next() = 0;		
+	int currentItem() const;
+		
+	bool operator==(const ListIterator& iter);
+	bool operator!=(const ListIterator& iter);
+	int operator*();
+	ListIterator& operator++();
+};
 
-		int currentItem() const {
-			if (current == -1)
-				throw exception("Can't obtain currentItem!");
-			return pList->vec[current];
-		}
-	};
+class ListIteratorStep : public ListIterator 
+{
+private:
+	int step;
+public:		
+	ListIteratorStep(const List* aPList, const int aStep = 1) : ListIterator(aPList), step(aStep - 1) {}
+	bool next() override;
+};
 
-	class ListIteratorStep : public ListIterator {
-	private:
-		int step;
-	public:
-		//friend class List;
-		ListIteratorStep(const List* aPList, int aStep = 1) : ListIterator(aPList) {
-			step = aStep - 1;
-			this->first();
-		}
+class ListIteratorPredicate : public ListIterator
+{
+private:
+	bool(*predicate)(int);
+public:
+	ListIteratorPredicate(const List* aPList, bool(*aPredicate)(int)) : ListIterator(aPList), predicate(aPredicate) {}
+	bool next() override;
+};
 
-		bool next() override {
-			current = current--;
-			for (auto i = 0; current != -1 && i < step; i++)
-				current = current--;
-			return current != -1;
-		}
-	};
-
-	class ListIteratorPredicate : public ListIterator
-	{
-	private:
-		void* predicate;
-	public:
-		ListIteratorPredicate(const List* aPList, void* aPredicate) : ListIterator(aPList) {
-			predicate = aPredicate;
-		}
-
-		//bool first() override {
-		//	return true;
-		//}
-
-		bool next() override
-		{
-			return true;
-		}
-
-	};
-
-	class ListIteratorValue : public ListIterator {
-	private:
-		int value;
-	public:
-		//friend class List;
-		ListIteratorValue(const List* aPList, int aValue) : ListIterator(aPList) {
-			value = aValue;
-			//first();
-		}
-
-		bool next() override {
-			current = current--;
-			while (current != -1 && pList->vec[current] != value)
-				current = current--;
-			return current != -1;
-		}
-
-	};
-
-
-
-
-
+class ListIteratorValue : public ListIterator
+{
+private:
+	int value;
+public:
+	ListIteratorValue(const List* aPList, const int aValue) : ListIterator(aPList), value(aValue) {}
+	bool next() override;
+};

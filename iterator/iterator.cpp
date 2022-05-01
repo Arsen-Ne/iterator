@@ -5,14 +5,13 @@
 #include <vector>
 using namespace std;
 
-
 unsigned counting(ListIterator* li) {
     unsigned cnt = 0;
     if (li->first())
         do {
             cnt++;
             cerr << li->currentItem() << " ";
-        } while (li->next());
+        } while (li->next());        
         cerr << endl;
         return cnt;
 }
@@ -37,10 +36,10 @@ int main()
 
     ListIterator* litS3 = list.createIterator(Iterators::STEP, 4);
     ListIterator* litV4 = list.createIterator(Iterators::VALUE, 4);
-    ListIterator* litPred = list.createIterator(Iterators::PREDICATE, 4);
+    ListIterator* litPred = list.createIterator(Iterators::PREDICATE, [](const int x) { return x % 2 == 0; });
 
-    //cout << counting((ListIteratorStep*)litS3) << endl;
+    cout << counting((ListIteratorStep*)litS3) << endl;
     cout << counting((ListIteratorValue*)litV4) << endl;
-    //cout << counting((ListIteratorValue*)litPred) << endl;
+    cout << counting((ListIteratorValue*)litPred) << endl;
 }
 
