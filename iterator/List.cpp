@@ -1,4 +1,6 @@
 #include "List.h"
+#include "Iterator.h"
+#include <exception>
 
 List::List(size_t aSize) {
 	vec.resize(aSize);

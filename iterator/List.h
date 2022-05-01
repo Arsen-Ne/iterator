@@ -1,15 +1,9 @@
 
 #include <vector>
-#include <exception>
+#include "Iterator.h"
 using namespace std;
 
 #pragma once
-
-enum class Iterators {
-	STEP,
-	VALUE,
-	PREDICATE
-};
 
 class List
 {
@@ -33,16 +27,15 @@ public:
 	ListIterator* createIterator(Iterators its, bool(*aPredicate)(int)) const;
 };
 
-class ListIterator
+class ListIterator : public Iterator
 {
 protected:
 	const List* pList;
 	size_t current;
 	ListIterator(const List* aPList) : pList(aPList) {}
 public:
-	bool first();
-	virtual bool next() = 0;		
-	int currentItem() const;
+	bool first() override;
+	int currentItem() const override;
 		
 	bool operator==(const ListIterator& iter);
 	bool operator!=(const ListIterator& iter);
