@@ -48,9 +48,9 @@ int main()
     Iterator* litS3 = list.createIterator(Iterators::STEP, 4);
     Iterator* litV4 = list.createIterator(Iterators::VALUE, 4);
     Iterator* litPred = list.createIterator(Iterators::PREDICATE, [](const int x) { return x % 2 == 0; }); 
-    cout << counting((StackIteratorStep*)litS3) << endl;   
-    cout << counting((StackIteratorValue*)litV4) << endl;
-    cout << counting((StackIteratorPredicate*)litPred) << endl;
+    cout << "step = 4 :" << counting((StackIteratorStep*)litS3) << endl;
+    cout << "value = 4 :" << counting((StackIteratorValue*)litV4) << endl;
+    cout << "predicate :" << counting((StackIteratorPredicate*)litPred) << endl;
 
 }
 
